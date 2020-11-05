@@ -8,6 +8,8 @@ from keras.layers import Dense, Activation, Dropout, LSTM
 from keras.models import Sequential, load_model
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 
+# Model class berfungsi untuk membangun model jaringan saraf. untuk membangun model diperlukan cofigurasi json agar mudah membuat instance model dengan arsitektur
+# dan hyperparameter yang diperlukan yang disimpan dalam file konfigurasi. Fungsi utama yang membangun jaringan kita adalah fungsi build_model () yang mengambil file konfigurasi parsing.
 class Model():
 	"""A class for an building and inferencing an lstm model"""
 
@@ -87,14 +89,14 @@ class Model():
 		timer.stop()
 
 	def predict_point_by_point(self, data):
-		#Predict each timestep given the last sequence of true data, in effect only predicting 1 step ahead each time
+		#Prediksi setiap langkah waktu dengan urutan terakhir dari data yang benar, yang berlaku hanya memprediksi 1 langkah ke depan setiap kali
 		print('[Model] Predicting Point-by-Point...')
 		predicted = self.model.predict(data)
 		predicted = np.reshape(predicted, (predicted.size,))
 		return predicted
 
 	def predict_sequences_multiple(self, data, window_size, prediction_len):
-		#Predict sequence of 50 steps before shifting prediction run forward by 50 steps
+		#Prediksi urutan 50 langkah sebelum menggeser prediksi yang dijalankan maju sebanyak 50 langkah
 		print('[Model] Predicting Sequences Multiple...')
 		prediction_seqs = []
 		for i in range(int(len(data)/prediction_len)):
@@ -108,7 +110,7 @@ class Model():
 		return prediction_seqs
 
 	def predict_sequence_full(self, data, window_size):
-		#Shift the window by 1 new prediction each time, re-run predictions on new window
+		#Shift jendela dengan 1 prediksi baru setiap kali, jalankan ulang prediksi di jendela baru
 		print('[Model] Predicting Sequences Full...')
 		curr_frame = data[0]
 		predicted = []

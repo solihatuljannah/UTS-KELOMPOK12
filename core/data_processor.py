@@ -2,6 +2,10 @@ import math
 import numpy as np
 import pandas as pd
 
+#Class DataLoader() berfungsi sebagai memuat data yang terdapat di folder Data untuk lapisan pemuat data.
+#inisialisasi objek DataLoader, nama file diteruskan, bersama dengan variabel terpisah yang menentukan persentase data yang akan digunakan untuk pelatihan vs. pengujian
+#dan variabel kolom yang memungkinkan untuk memilih satu atau lebih kolom data untuk analisis dimensi tunggal atau multidimensi.
+
 class DataLoader():
     """A class for loading and transforming data for the lstm model"""
 
@@ -13,7 +17,8 @@ class DataLoader():
         self.len_train  = len(self.data_train)
         self.len_test   = len(self.data_test)
         self.len_train_windows = None
-
+        
+    # Fungsi untuk mengambil data testing.
     def get_test_data(self, seq_len, normalise):
         '''
         Create x, y test data windows
@@ -31,6 +36,7 @@ class DataLoader():
         y = data_windows[:, -1, [0]]
         return x,y
 
+    # Fungsi untuk mengambil data pelatihan.
     def get_train_data(self, seq_len, normalise):
         '''
         Create x, y train data windows
@@ -61,7 +67,8 @@ class DataLoader():
                 y_batch.append(y)
                 i += 1
             yield np.array(x_batch), np.array(y_batch)
-
+            
+    # Fungsi untuk data selanjutnya.
     def _next_window(self, i, seq_len, normalise):
         '''Generates the next data window from the given index location i'''
         window = self.data_train[i:i+seq_len]
@@ -70,6 +77,7 @@ class DataLoader():
         y = window[-1, [0]]
         return x, y
 
+    # Fungsi untuk data normalisasi data.
     def normalise_windows(self, window_data, single_window=False):
         '''Normalise window with a base value of zero'''
         normalised_data = []
